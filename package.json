@@ -38,5 +38,7 @@
     "automock": false,
     "clearMocks": true
   },
-  "dependencies": {}
+  "dependencies": {
+    "mqtt": "^2.18.8"
+  }
 }
