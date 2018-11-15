@@ -1,0 +1,42 @@
+{
+  "name": "ftrm-tracking",
+  "version": "0.0.0",
+  "description": "Footurama Tracking",
+  "main": "index.js",
+  "scripts": {
+    "test": "happiness && jest --verbose",
+    "watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Footurama/ftrm-tracking.git"
+  },
+  "keywords": [
+    "iot",
+    "home automation"
+  ],
+  "author": "Juergen Fitschen <me@jue.yt>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Footurama/ftrm-tracking/issues"
+  },
+  "homepage": "https://github.com/Footurama/ftrm-tracking#readme",
+  "devDependencies": {
+    "happiness": "^10.0.2",
+    "jest": "^23.1.0"
+  },
+  "happiness": {
+    "globals": [
+      "jest",
+      "describe",
+      "test",
+      "expect",
+      "beforeEach"
+    ]
+  },
+  "jest": {
+    "automock": false,
+    "clearMocks": true
+  },
+  "dependencies": {}
+}
