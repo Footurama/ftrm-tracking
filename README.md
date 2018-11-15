@@ -34,8 +34,7 @@ Configuration:
 
  * ```input```: **1**. Input pipe of current position. Format: ```[latitude, longitude]```.
  * ```output```: **1**. Distance to home location.
- * ```latitude```: Latitude of home position.
- * ```longitude```: Longitude of home position.
+ * ```home```: Home geo location. Format: ```[latitude, longitude]```.
  * ```planetRadius```: Radius of your home planet. Default: ```6371000```. If you are living on Mars, change to ```3390000```.
 
 Example:
@@ -44,7 +43,6 @@ Example:
 module.exports = [require('ftrm-tracking/distance'), {
 	input: 'geo-position',
 	output: 'distance',
-	latitude: 37.234332396,
-	longitude: -115.80666344
+	home: [37.234332396, -115.80666344]
 }];
 ```

@@ -1,8 +1,7 @@
 function check (opts) {
 	if (opts.input.length !== 1) throw new Error('One input must be specified');
 	if (opts.output.length !== 1) throw new Error('One output must be specified');
-	if (opts.latitude === undefined) throw new Error('Option latitude must be specified');
-	if (opts.longitude === undefined) throw new Error('Option longitude must be specified');
+	if (opts.home === undefined) throw new Error('Option home must be specified');
 	if (opts.planetRadius === undefined) opts.planetRadius = 6371000;
 }
 
@@ -15,7 +14,7 @@ const sqrt = Math.sqrt;
 const atan2 = Math.atan2;
 
 function factory (opts, input, output) {
-	const home = geoToRad([opts.latitude, opts.longitude]);
+	const home = geoToRad(opts.home);
 	input[0].on('update', (pos) => {
 		pos = geoToRad(pos);
 		const d = geoDiff(pos, home);

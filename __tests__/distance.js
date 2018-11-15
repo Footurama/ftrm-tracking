@@ -7,8 +7,7 @@ describe('check', () => {
 			distance.check({
 				input: [],
 				output: [ {} ],
-				latitude: 1,
-				longitude: 2
+				home: [2, 1]
 			});
 			throw new Error('FAILED!');
 		} catch (e) {
@@ -22,8 +21,7 @@ describe('check', () => {
 			distance.check({
 				input: [ {} ],
 				output: [],
-				latitude: 1,
-				longitude: 2
+				home: [2, 1]
 			});
 			throw new Error('FAILED!');
 		} catch (e) {
@@ -32,31 +30,16 @@ describe('check', () => {
 		}
 	});
 
-	test('expect latitude', () => {
+	test('expect home', () => {
 		try {
 			distance.check({
 				input: [ {} ],
-				output: [ {} ],
-				longitude: 2
+				output: [ {} ]
 			});
 			throw new Error('FAILED!');
 		} catch (e) {
 			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('Option latitude must be specified');
-		}
-	});
-
-	test('expect longitude', () => {
-		try {
-			distance.check({
-				input: [ {} ],
-				output: [ {} ],
-				latitude: 2
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('Option longitude must be specified');
+			expect(e.message).toEqual('Option home must be specified');
 		}
 	});
 
@@ -64,8 +47,7 @@ describe('check', () => {
 		const opts = {
 			input: [ {} ],
 			output: [ {} ],
-			latitude: 2,
-			longitude: 1
+			home: [2, 1]
 		};
 		distance.check(opts);
 		expect(opts.planetRadius).toBe(6371000);
@@ -76,8 +58,7 @@ describe('factory', () => {
 	test('convert incoming positions', () => {
 		const opts = {
 			planetRadius: 6371000,
-			latitude: 51,
-			longitude: 9
+			home: [51, 9]
 		};
 		const input = new EventEmitter();
 		const output = {};
