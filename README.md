@@ -32,17 +32,18 @@ Calculate distance to geo position
 
 Configuration:
 
- * ```input```: **1**. Input pipe of current position. Format: ```[latitude, longitude]```.
- * ```output```: **1**. Distance to home location.
- * ```home```: Home geo location. Format: ```[latitude, longitude]```.
+ * ```input```: **2**. Input pipe of current positions. Format: ```[latitude, longitude]```.
+ * ```output```: **1**. Distance of both latest input positions.
  * ```planetRadius```: Radius of your home planet. Default: ```6371000```. If you are living on Mars, change to ```3390000```.
 
 Example:
 
 ```js
 module.exports = [require('ftrm-tracking/distance'), {
-	input: 'geo-position',
-	output: 'distance',
-	home: [37.234332396, -115.80666344]
+	input: [
+		{pipe: 'geo-position'},
+		{value: [37.234332396, -115.80666344]} // Fixed position
+	],
+	output: 'distance'
 }];
 ```

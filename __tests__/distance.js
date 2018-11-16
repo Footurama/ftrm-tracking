@@ -2,26 +2,24 @@ const EventEmitter = require('events');
 const distance = require('../distance.js');
 
 describe('check', () => {
-	test('expect one input', () => {
+	test('expect two inputs', () => {
 		try {
 			distance.check({
 				input: [],
-				output: [ {} ],
-				home: [2, 1]
+				output: [ {} ]
 			});
 			throw new Error('FAILED!');
 		} catch (e) {
 			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('One input must be specified');
+			expect(e.message).toEqual('Two inputs must be specified');
 		}
 	});
 
 	test('expect one output', () => {
 		try {
 			distance.check({
-				input: [ {} ],
-				output: [],
-				home: [2, 1]
+				input: [ {}, {} ],
+				output: []
 			});
 			throw new Error('FAILED!');
 		} catch (e) {
@@ -30,24 +28,10 @@ describe('check', () => {
 		}
 	});
 
-	test('expect home', () => {
-		try {
-			distance.check({
-				input: [ {} ],
-				output: [ {} ]
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('Option home must be specified');
-		}
-	});
-
 	test('default radius', () => {
 		const opts = {
-			input: [ {} ],
-			output: [ {} ],
-			home: [2, 1]
+			input: [ {}, {} ],
+			output: [ {} ]
 		};
 		distance.check(opts);
 		expect(opts.planetRadius).toBe(6371000);
@@ -56,14 +40,18 @@ describe('check', () => {
 
 describe('factory', () => {
 	test('convert incoming positions', () => {
-		const opts = {
-			planetRadius: 6371000,
-			home: [51, 9]
-		};
-		const input = new EventEmitter();
+		const pos1 = [51, 9];
+		const pos2 = [51, 10];
+		const opts = {planetRadius: 6371000};
+		const input1 = new EventEmitter();
+		const input2 = new EventEmitter();
 		const output = {};
-		distance.factory(opts, [input], [output]);
-		input.emit('update', [51, 10]);
+		distance.factory(opts, [input1, input2], [output]);
+		input1.value = pos1;
+		input1.emit('update');
+		expect(output.value).toBeUndefined();
+		input2.value = pos2;
+		input2.emit('update');
 		expect(output.value).toBeCloseTo(69977, 0);
 	});
 });
