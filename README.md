@@ -47,3 +47,29 @@ module.exports = [require('ftrm-tracking/distance'), {
 	output: 'distance'
 }];
 ```
+
+## ftrm-tracking/pcap
+
+Detect whether a device is online or not by sniffing for ethernet packets originated from the device's MAC address.
+
+Configuration:
+ * ```input```: **0**.
+ * ```output```: **1..2**. Statistic pipes.
+   * ```name: 'online'```: Mandatory. If the amount of counted packets is larger than the threshold, ```true``` is emitted.
+   * ```name: 'packetCnt'```: Optional. Amount of counted packets within the specified window.
+ * ```mac```: The MAC address of the tracked device.
+ * ```interface```: Name of the interface to listen to.
+ * ```timeSlot```: Length in milliseconds of one time slot. After each time slot the current state is emitted on the output pipes. Default: ```10000```.
+ * ```windowSize```: Amount of time slots to accumulate the packet count. Default: ```15 * 6```.
+ * ```threshold```: Minimal amount of packets within the window to mark a device *online*. Default: ```15```.
+
+Example:
+
+```js
+// Will emit true on pipe 'deviceOnline' if more than 15 packets
+// has been seen from '12:34:56:78:90:ab' within 15 minutes.
+module.exports = [require('ftrm-tracking/pcap'), {
+	output: 'deviceOnline',
+	mac: '12:34:56:78:90:ab'
+}];
+```
