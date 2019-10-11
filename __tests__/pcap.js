@@ -96,6 +96,17 @@ describe('check', () => {
 		expect(opts.timeSlot).toBe(10000);
 		expect(opts.windowSize).toBe(15 * 6);
 		expect(opts.threshold).toBe(15);
+		expect(opts.hysteresis).toBe(0);
+	});
+
+	test('expect threshold - hysteresis/2 >= 0', () => {
+		expect(() => pcap.check({
+			input: [],
+			output: [{}],
+			mac: '00:00:00:00:00:00',
+			threshold: 1,
+			hysteresis: 3
+		})).toThrowError('Combination of threshold and hysteresis leads to deadlocked online state');
 	});
 });
 
@@ -142,8 +153,9 @@ describe('factory', () => {
 		const timeSlot = 123;
 		const windowSize = 2;
 		const threshold = 1;
+		const hysteresis = 0;
 		const output = {online: {}};
-		pcap.factory({mac: '12:34:56:78:90:ab', timeSlot, windowSize, threshold}, {}, output);
+		pcap.factory({mac: '12:34:56:78:90:ab', timeSlot, windowSize, threshold, hysteresis}, {}, output);
 		// 1
 		mockPcap.session.emitPacket(1);
 		jest.advanceTimersByTime(timeSlot);
@@ -152,6 +164,31 @@ describe('factory', () => {
 		mockPcap.session.emitPacket(1);
 		jest.advanceTimersByTime(timeSlot);
 		expect(output.online.value).toBe(true);
+	});
+
+	test('set online state with hystersis', () => {
+		const timeSlot = 123;
+		const windowSize = 2;
+		const threshold = 2;
+		const hysteresis = 2;
+		const output = {online: {}};
+		pcap.factory({mac: '12:34:56:78:90:ab', timeSlot, windowSize, threshold, hysteresis}, {}, output);
+
+		mockPcap.session.emitPacket(3);
+		jest.advanceTimersByTime(timeSlot);
+		expect(output.online.value).toBe(false); // 3
+
+		mockPcap.session.emitPacket(1);
+		jest.advanceTimersByTime(timeSlot);
+		expect(output.online.value).toBe(true); // 4
+
+		mockPcap.session.emitPacket(1);
+		jest.advanceTimersByTime(timeSlot);
+		expect(output.online.value).toBe(true); // 2
+
+		mockPcap.session.emitPacket(0);
+		jest.advanceTimersByTime(timeSlot);
+		expect(output.online.value).toBe(false); // 1
 	});
 
 	test('cancel capture on exit', () => {

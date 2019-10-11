@@ -18,6 +18,8 @@ function check (opts) {
 	if (opts.timeSlot === undefined) opts.timeSlot = 10000;
 	if (opts.windowSize === undefined) opts.windowSize = 15 * 6;
 	if (opts.threshold === undefined) opts.threshold = 15;
+	if (opts.hysteresis === undefined) opts.hysteresis = 0;
+	if (opts.threshold - opts.hysteresis / 2 < 0) throw new Error('Combination of threshold and hysteresis leads to deadlocked online state');
 }
 
 function factory (opts, input, output) {
@@ -27,7 +29,11 @@ function factory (opts, input, output) {
 	const windowInterval = setInterval(() => {
 		// Accumulate packets
 		const packetCnt = window.reduce((acc, slot) => acc + slot, 0);
-		output.online.value = packetCnt > opts.threshold;
+		if (output.online.value) {
+			output.online.value = packetCnt > opts.threshold - opts.hysteresis / 2;
+		} else {
+			output.online.value = packetCnt > opts.threshold + opts.hysteresis / 2;
+		}
 		if (output.packetCnt) output.packetCnt.value = packetCnt;
 
 		// Slide window
