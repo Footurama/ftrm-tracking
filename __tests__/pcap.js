@@ -8,31 +8,19 @@ const pcap = require('../pcap.js');
 
 describe('check', () => {
 	test('expect zero inputs', () => {
-		try {
-			pcap.check({
-				input: [{}],
-				output: [{}],
-				mac: '00:00:00:00:00:00'
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('No inputs can be specified');
-		}
+		expect(() => pcap.check({
+			input: [{}],
+			output: [{}],
+			mac: '00:00:00:00:00:00'
+		})).toThrowError('No inputs can be specified');
 	});
 
 	test('expect at least one output', () => {
-		try {
-			pcap.check({
-				input: [],
-				output: [],
-				mac: '00:00:00:00:00:00'
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('One or two outputs must be specified');
-		}
+		expect(() => pcap.check({
+			input: [],
+			output: [],
+			mac: '00:00:00:00:00:00'
+		})).toThrowError('One or two outputs must be specified');
 	});
 
 	test('set name for one input', () => {
@@ -46,44 +34,26 @@ describe('check', () => {
 	});
 
 	test('expect names for two outputs', () => {
-		try {
-			pcap.check({
-				input: [],
-				output: [{}, {}],
-				mac: '00:00:00:00:00:00'
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('If two outputs are specified, they must be named online resp. packetCnt');
-		}
+		expect(() => pcap.check({
+			input: [],
+			output: [{}, {}],
+			mac: '00:00:00:00:00:00'
+		})).toThrowError('If two outputs are specified, they must be named online resp. packetCnt');
 	});
 
 	test('expect mac', () => {
-		try {
-			pcap.check({
-				input: [],
-				output: [{}]
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('Option mac must be specified');
-		}
+		expect(() => pcap.check({
+			input: [],
+			output: [{}]
+		})).toThrowError('Option mac must be specified');
 	});
 
 	test('expect valid mac', () => {
-		try {
-			pcap.check({
-				input: [],
-				output: [{}],
-				mac: '00:00:00:00:00:0y'
-			});
-			throw new Error('FAILED!');
-		} catch (e) {
-			expect(e).toBeInstanceOf(Error);
-			expect(e.message).toEqual('Option mac has the wrong format');
-		}
+		expect(() => pcap.check({
+			input: [],
+			output: [{}],
+			mac: '00:00:00:00:00:0y'
+		})).toThrowError('Option mac has the wrong format');
 	});
 
 	test('default timsSlot, windowSize and threshold', () => {
