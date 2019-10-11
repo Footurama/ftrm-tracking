@@ -1,5 +1,8 @@
-jest.mock('pcap');
-const mockPcap = require('pcap');
+jest.mock('../lib/pcap.js');
+const mockPcap = require('../lib/pcap.js');
+
+jest.mock('os');
+const mockOs = require('os');
 
 jest.useFakeTimers();
 afterEach(() => jest.clearAllTimers());
@@ -77,6 +80,30 @@ describe('check', () => {
 			threshold: 1,
 			hysteresis: 3
 		})).toThrowError('Combination of threshold and hysteresis leads to deadlocked online state');
+	});
+
+	test('default to first interface', () => {
+		mockOs.networkInterfaces.mockReturnValueOnce({
+			lo: [],
+			en0: []
+		});
+		const opts = {
+			input: [],
+			output: [{}],
+			mac: '00:00:00:00:00:00'
+		};
+		pcap.check(opts);
+		expect(opts.interface).toEqual('en0');
+	});
+
+	test('make sure the given interface exists', () => {
+		mockOs.networkInterfaces.mockReturnValueOnce({});
+		expect(() => pcap.check({
+			input: [],
+			output: [{}],
+			mac: '00:00:00:00:00:00',
+			interface: 'foo'
+		})).toThrowError('Stated interface does not exist');
 	});
 });
 

@@ -1,4 +1,5 @@
-const pcap = require('pcap');
+const os = require('os');
+const pcap = require('./lib/pcap.js');
 
 const REmac = /^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}$/;
 
@@ -20,6 +21,11 @@ function check (opts) {
 	if (opts.threshold === undefined) opts.threshold = 15;
 	if (opts.hysteresis === undefined) opts.hysteresis = 0;
 	if (opts.threshold - opts.hysteresis / 2 < 0) throw new Error('Combination of threshold and hysteresis leads to deadlocked online state');
+	if (opts.interface === undefined) {
+		opts.interface = Object.keys(os.networkInterfaces()).find((i) => i.substr(0, 2) !== 'lo');
+	} else {
+		if (!os.networkInterfaces()[opts.interface]) throw new Error('Stated interface does not exist');
+	}
 }
 
 function factory (opts, input, output) {
