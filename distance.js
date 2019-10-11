@@ -1,3 +1,8 @@
+const pkgInfo = require('./package.json');
+const fileName = __filename.slice(__dirname.length + 1, -3);
+const name = `${pkgInfo.name}/${fileName}`;
+const url = pkgInfo.homepage;
+
 function check (opts) {
 	if (opts.input.length !== 2) throw new Error('Two inputs must be specified');
 	if (opts.output.length !== 1) throw new Error('One output must be specified');
@@ -33,4 +38,4 @@ function factory (opts, input, output) {
 	}
 }
 
-module.exports = {check, factory};
+module.exports = {name, url, check, factory};

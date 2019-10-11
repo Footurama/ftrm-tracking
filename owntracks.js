@@ -1,3 +1,8 @@
+const pkgInfo = require('./package.json');
+const fileName = __filename.slice(__dirname.length + 1, -3);
+const name = `${pkgInfo.name}/${fileName}`;
+const url = pkgInfo.homepage;
+
 const mqtt = require('mqtt');
 
 function check (opts) {
@@ -18,4 +23,4 @@ function factory (opts, input, output) {
 	return () => connection.end();
 }
 
-module.exports = {check, factory};
+module.exports = {name, url, check, factory};
